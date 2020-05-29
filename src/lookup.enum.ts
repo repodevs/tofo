@@ -17,3 +17,7 @@ export enum LookupDelimiter {
   LOOKUP_DELIMITER = '__',
   RELATION_DELIMITER = '.'
 }
+
+export enum Condition {
+  OR = '$or'
+}

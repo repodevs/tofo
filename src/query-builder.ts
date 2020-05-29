@@ -1,5 +1,6 @@
 import { ITEMS_PER_PAGE } from './default-config';
 import { FilterFactory } from './filter-factory';
+import { Condition } from './lookup.enum';
 
 export class QueryBuilder {
   private expressQuery: any;
@@ -11,8 +12,6 @@ export class QueryBuilder {
   }
 
   public build(): any {
-    const factory = new FilterFactory();
-
     if (
       this.expressQuery['pagination'] === undefined ||
       this.expressQuery['pagination'] === true
@@ -25,14 +24,14 @@ export class QueryBuilder {
     this.setRelations();
     this.setFieldSelection();
 
+    const factory = new FilterFactory();
     for (const queryItem in this.expressQuery) {
-      const filter = factory.get(
-        this.typeORMQuery,
-        queryItem,
-        this.expressQuery[queryItem]
-      );
-      filter.buildQuery();
+      factory
+        .get(this.typeORMQuery, queryItem, this.expressQuery[queryItem])
+        .buildQuery();
     }
+
+    this.findAndsetOrQuery();
 
     return this.typeORMQuery;
   }
@@ -70,6 +69,35 @@ export class QueryBuilder {
       .map((key: string) => key.trim());
     this.typeORMQuery['select'] = fields;
     delete this.expressQuery['select'];
+  }
+
+  private findAndsetOrQuery() {
+    if (!this.expressQuery[Condition.OR]) return;
+    let conditions: string[] = this.expressQuery[Condition.OR];
+    if (!Array.isArray(conditions)) conditions = [conditions];
+    const factory = new FilterFactory();
+    const andCond = this.typeORMQuery['where'];
+    this.typeORMQuery['where'] = [];
+
+    conditions.forEach(condition => {
+      const parsed = this.parseOrCondition(condition);
+      const findOpts = {};
+      for (const queryItem in parsed) {
+        factory.get(findOpts, queryItem, parsed[queryItem]).buildQuery();
+      }
+      this.typeORMQuery['where'].push({ ...findOpts['where'], ...andCond });
+    });
+    delete this.expressQuery[Condition.OR];
+  }
+
+  private parseOrCondition(query: string) {
+    const result = {};
+    const fields = query.split('|');
+    fields.forEach(field => {
+      const keyValue = field.split(':');
+      result[keyValue[0]] = keyValue[1];
+    });
+    return result;
   }
 
   private setOrder() {

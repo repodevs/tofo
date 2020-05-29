@@ -113,6 +113,28 @@ You can use negative logic prefixing lookup with `__not`. *Example:* `foo__not__
 
 Querying a column from an embedded entity. *Example*: `user.name=value`
 
+## OR condition union
+```typescript
+// ?$or=name:juste|age__gte:15&$or=user.role:admin
+{
+  where: [
+    { name: 'juste', age: MoreThanOrEqual('15') },
+    { user: { role: 'admin' } }
+  ],
+  skip: 20,
+  take: 10
+}
+
+// ?city=Dahomey&$or=name:juste|age__gte:15&$or=user.role:admin
+{
+  where: [
+    { name: 'juste', city: 'Dahomey', age: MoreThanOrEqual('15') },
+    { user: { role: 'admin' }, city: 'Dahomey' }
+  ],
+  skip: 20,
+  take: 10
+}
+```
 ## Options
 
 | Option | Default | Behaviour | Example |
@@ -121,6 +143,6 @@ pagination | __true__ | If _true_, paginate results. If _false_, disable paginat
 page | __1__ | Return entries for page `page` | `page=2`
 limit | __25__ | Return entries for page `page` paginated by size `limit` | `limit=15`
 order | - | Order for fields:<br>`+`: Ascendant <br> `-`: Descendant | `order=+foo,-name,+surname`
-join | __undefined__ | Set relations | `join=posts,comments`
-select | __undefined__ | Set fields selection | `select=name,phoneNumber`
+join | - | Set relations | `join=posts,comments`
+select | - | Set fields selection | `select=name,phoneNumber`
 

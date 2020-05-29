@@ -1,4 +1,4 @@
-import { Like } from 'typeorm';
+import { Like, MoreThanOrEqual } from 'typeorm';
 import { ITEMS_PER_PAGE } from '../../src/default-config';
 import { QueryBuilder } from '../../src/query-builder';
 
@@ -258,5 +258,45 @@ describe('Test QueryBuilder #getOrderCriteria', () => {
     expect(() => {
       queryBuilder.getOrderCriteria('foo');
     }).toThrow();
+  });
+
+  it('should build simple OR type condition', () => {
+    const queryBuilder = new QueryBuilder({
+      $or: 'name:juste|age__gte:15',
+      pagination: false
+    });
+    const build = queryBuilder.build();
+    expect(build).toEqual({
+      where: [{ name: 'juste', age: MoreThanOrEqual('15') }]
+    });
+  });
+
+  it('should build several OR type condition unions', () => {
+    const queryBuilder = new QueryBuilder({
+      $or: ['name:juste|age__gte:15', 'user.role:admin'],
+      pagination: false
+    });
+    const build = queryBuilder.build();
+    expect(build).toEqual({
+      where: [
+        { name: 'juste', age: MoreThanOrEqual('15') },
+        { user: { role: 'admin' } }
+      ]
+    });
+  });
+
+  it('should build several union of condition of type OR combined with a basic condition AND', () => {
+    const queryBuilder = new QueryBuilder({
+      $or: ['name:juste|age__gte:15', 'user.role:admin'],
+      city: 'Dahomey',
+      pagination: false
+    });
+    const build = queryBuilder.build();
+    expect(build).toEqual({
+      where: [
+        { name: 'juste', city: 'Dahomey', age: MoreThanOrEqual('15') },
+        { user: { role: 'admin' }, city: 'Dahomey' }
+      ]
+    });
   });
 });

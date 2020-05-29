@@ -1,6 +1,6 @@
 {
   "name": "typeorm-server-query-builder",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Easily transform an url query into TypeORM query",
   "main": "index.js",
   "scripts": {
