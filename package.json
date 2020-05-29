@@ -1,7 +1,7 @@
 {
-  "name": "typeorm-express-query-builder",
-  "version": "1.2.0",
-  "description": "Easily transform an Express req.query into TypeORM query",
+  "name": "typeorm-server-query-builder",
+  "version": "1.2.1",
+  "description": "Easily transform an url query into TypeORM query",
   "main": "index.js",
   "scripts": {
     "build": "tsc -p .",
@@ -21,6 +21,7 @@
     "nest"
   ],
   "author": "rjlopezdev",
+  "contributors": ["justkey007"],
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^24.9.0",

@@ -2,40 +2,35 @@
   <img src="https://raw.githubusercontent.com/rjlopezdev/typeorm-express-query-builder/master/logo.jpg" alt="TypeORM Express Query Builder logo" width="200" height="200">
 </p>
 
-<h1 align="center"> TypeORM Express Query Builder </h1>
+<h1 align="center"> TypeORM Server Query Builder </h1>
 
 <p align="center">
-  Easily transform an Express req.query into TypeORM query
+  Easily transform an url query into TypeORM query
   <br>
   <br>
   <img src="https://circleci.com/gh/rjlopezdev/typeorm-express-query-builder/tree/master.svg?style=svg">
   <br>
   <br>
-  <img src="https://img.shields.io/badge/maintainer-rjlopezdev-orange.svg?link=https://github.com/rjlopezdev">
-  <br>
   <a href="https://codecov.io/gh/rjlopezdev/typeorm-express-query-builder">
   <img src="https://codecov.io/gh/rjlopezdev/typeorm-express-query-builder/branch/master/graph/badge.svg" />
   </a>
-  <img src="https://badge.fury.io/js/typeorm-express-query-builder.svg">
+  <img src="https://badge.fury.io/js/typeorm-server-query-builder.svg">
   <img src="https://img.shields.io/badge/license-MIT-green.svg">
   <br>
   <br>
-  <a href="CONTRIBUTING.md"> Contributing </a>
-  ·
-  <a href="LICENSE"> License </a>
 </p>
 
 # TypeORM Express Query Builder
-This library allows you to transfrom automatically Express.js _req.query_ into TypeORM findOptions queries.
+This library allows you to transfrom automatically _url query_ into TypeORM findOptions queries.
 
 ## Installation
 
-`npm install typeorm-express-query-builder`
+`npm install typeorm-server-query-builder`
 
 
 ## How it works?
 
-![](https://raw.githubusercontent.com/rjlopezdev/typeorm-express-query-builder/master/typeorm-express-pipeline.png)
+![](https://raw.githubusercontent.com/justkey007/typeorm-server-query-builder/master/typeorm-express-pipeline.png)
 
 
 ## Usage
@@ -43,7 +38,7 @@ This library allows you to transfrom automatically Express.js _req.query_ into T
 Use QueryBuilder export from package and pass your `req.query` as an argument:
 
 ```typescript
-import QueryBuilder from 'typeorm-express-query-builder';
+import QueryBuilder from 'typeorm-server-query-builder';
 
 const builder = new QueryBuilder(req.query);
 const builtQuery = builder.build();
@@ -130,5 +125,6 @@ __between__ | Return entries in range | `foo__between=1,27`
 pagination | __true__ | If _true_, paginate results. If _false_, disable pagination | `pagination=false`
 page | __1__ | Return entries for page `page` | `page=2`
 limit | __25__ | Return entries for page `page` paginated by size `limit` | `limit=15`
+join | __undefined__ | Set relations | `join=posts,comments`
 order | - | Order for fields:<br>`+`: Ascendant <br> `-`: Descendant | `order=+foo,-name,+surname`
 

@@ -1,17 +1,16 @@
 import express = require('express');
 import request = require('supertest');
 import bodyParser = require('body-parser');
-import { QueryBuilder } from '../../../src/query-builder';
 import { Like } from 'typeorm';
+import { QueryBuilder } from '../../../src/query-builder';
 
 describe('Test Express integration', () => {
-
   let server;
 
-  beforeAll((done) => {
+  beforeAll(done => {
     let app = express();
     app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: true}));
+    app.use(bodyParser.urlencoded({ extended: true }));
     app.get('/get', (req, res) => {
       const queryBuilder = new QueryBuilder(req.query);
       const built = queryBuilder.build();
@@ -27,18 +26,20 @@ describe('Test Express integration', () => {
       const built = queryBuilder.build();
       res.send(built);
     });
-    server = app.listen(3000, () => {
+    server = app.listen(4000, () => {
       done();
     });
-  })
+  });
 
   afterAll(() => {
     server.close();
-  })
+  });
 
-  it('should return an appropiate query built for GET /get?...', (done) => {
+  it('should return an appropiate query built for GET /get?...', done => {
     request(server)
-      .get('/get?name=rjlopezdev&email__contains=@gmail.com')
+      .get(
+        '/get?name=rjlopezdev&email__contains=@gmail.com&join=posts,comments'
+      )
       .expect(200)
       .end((err, res) => {
         expect(JSON.parse(res.text)).toEqual({
@@ -46,14 +47,15 @@ describe('Test Express integration', () => {
             name: 'rjlopezdev',
             email: Like('%@gmail.com%')
           },
+          relations: ['posts', 'comments'],
           skip: 0,
           take: 25
         });
         done();
-      })
-  })
+      });
+  });
 
-  it('should return an appropiate query built for POST /post_urlquery?...', (done) => {
+  it('should return an appropiate query built for POST /post_urlquery?...', done => {
     request(server)
       .post('/post_urlquery?name=rjlopezdev&email__contains=@gmail.com')
       .expect(200)
@@ -67,10 +69,10 @@ describe('Test Express integration', () => {
           take: 25
         });
         done();
-      })
-  })
+      });
+  });
 
-  it('should return an appropiate query built for POST /post_body, body: {...}', (done) => {
+  it('should return an appropiate query built for POST /post_body, body: {...}', done => {
     request(server)
       .post('/post_body')
       .send({
@@ -88,7 +90,6 @@ describe('Test Express integration', () => {
           take: 25
         });
         done();
-      })
-  })
-
-})
+      });
+  });
+});
