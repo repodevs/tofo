@@ -23,6 +23,7 @@ export class QueryBuilder {
     delete this.expressQuery['pagination'];
     this.setOrder();
     this.setRelations();
+    this.setFieldSelection();
 
     for (const queryItem in this.expressQuery) {
       const filter = factory.get(
@@ -60,6 +61,15 @@ export class QueryBuilder {
       .map((key: string) => key.trim());
     this.typeORMQuery['relations'] = relations;
     delete this.expressQuery['join'];
+  }
+
+  private setFieldSelection() {
+    if (!this.expressQuery['select']) return;
+    const fields = this.expressQuery['select']
+      .split(',')
+      .map((key: string) => key.trim());
+    this.typeORMQuery['select'] = fields;
+    delete this.expressQuery['select'];
   }
 
   private setOrder() {

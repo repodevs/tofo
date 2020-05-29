@@ -7,7 +7,8 @@ describe('Test Query Builder #build', () => {
     const queryBuilder = new QueryBuilder({
       name: 'rjlopezdev',
       email__contains: '@gmail.com',
-      join: 'posts,comments'
+      join: 'posts,comments',
+      select: 'name,phoneNumber'
     });
     const build = queryBuilder.build();
     expect(build).toEqual({
@@ -16,6 +17,7 @@ describe('Test Query Builder #build', () => {
         email: Like('%@gmail.com%')
       },
       relations: ['posts', 'comments'],
+      select: ['name', 'phoneNumber'],
       skip: 0,
       take: ITEMS_PER_PAGE
     });

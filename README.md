@@ -1,14 +1,8 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/rjlopezdev/typeorm-express-query-builder/master/logo.jpg" alt="TypeORM Express Query Builder logo" width="200" height="200">
-</p>
-
-<h1 align="center"> TypeORM Server Query Builder </h1>
-
-<p align="center">
   Easily transform an url query into TypeORM query
   <br>
   <br>
-  <img src="https://circleci.com/gh/rjlopezdev/typeorm-express-query-builder/tree/master.svg?style=svg">
+  <img src="https://circleci.com/gh/justkey007/typeorm-server-query-builder/tree/master.svg?style=svg">
   <br>
   <br>
   <a href="https://codecov.io/gh/rjlopezdev/typeorm-express-query-builder">
@@ -125,6 +119,7 @@ __between__ | Return entries in range | `foo__between=1,27`
 pagination | __true__ | If _true_, paginate results. If _false_, disable pagination | `pagination=false`
 page | __1__ | Return entries for page `page` | `page=2`
 limit | __25__ | Return entries for page `page` paginated by size `limit` | `limit=15`
-join | __undefined__ | Set relations | `join=posts,comments`
 order | - | Order for fields:<br>`+`: Ascendant <br> `-`: Descendant | `order=+foo,-name,+surname`
+join | __undefined__ | Set relations | `join=posts,comments`
+select | __undefined__ | Set fields selection | `select=name,phoneNumber`
 
