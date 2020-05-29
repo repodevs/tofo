@@ -1,37 +1,74 @@
-import { Like, IsNull, MoreThan, MoreThanOrEqual, LessThanOrEqual, LessThan, Between, In, Not } from 'typeorm';
+import {
+  Between,
+  In,
+  IsNull,
+  LessThan,
+  LessThanOrEqual,
+  Like,
+  MoreThan,
+  MoreThanOrEqual,
+  Not
+} from 'typeorm';
 import { FieldFilter } from '../../src/field-filter';
 import { LookupFilter } from '../../src/lookup.enum';
 
 describe('Test FieldFilter #buildQuery', () => {
-
-  const built = {};
+  let built = {};
+  beforeEach(() => {
+    built = {};
+  });
 
   it('should return an <exact> filter', () => {
-    const fieldFilter = new FieldFilter(built, 'name', LookupFilter.EXACT, 'value');
+    const fieldFilter = new FieldFilter(
+      built,
+      'name',
+      LookupFilter.EXACT,
+      'value'
+    );
     fieldFilter.buildQuery();
     expect(built['where']['name']).toBe('value');
   });
 
   it('should return a <contains> filter', () => {
-    const fieldFilter = new FieldFilter(built, 'name', LookupFilter.CONTAINS, 'value');
+    const fieldFilter = new FieldFilter(
+      built,
+      'name',
+      LookupFilter.CONTAINS,
+      'value'
+    );
     fieldFilter.buildQuery();
     expect(built['where']['name']).toEqual(Like('%value%'));
   });
 
   it('should return an <startswith> contains filter', () => {
-    const fieldFilter = new FieldFilter(built, 'name', LookupFilter.STARTS_WITH, 'value');
+    const fieldFilter = new FieldFilter(
+      built,
+      'name',
+      LookupFilter.STARTS_WITH,
+      'value'
+    );
     fieldFilter.buildQuery();
     expect(built['where']['name']).toEqual(Like('value%'));
   });
 
   it('should return an <endswith> filter', () => {
-    const fieldFilter = new FieldFilter(built, 'name', LookupFilter.ENDS_WITH, 'value');
+    const fieldFilter = new FieldFilter(
+      built,
+      'name',
+      LookupFilter.ENDS_WITH,
+      'value'
+    );
     fieldFilter.buildQuery();
     expect(built['where']['name']).toEqual(Like('%value'));
   });
 
   it('should return an <isnull> filter', () => {
-    const fieldFilter = new FieldFilter(built, 'name', LookupFilter.IS_NULL, 'value');
+    const fieldFilter = new FieldFilter(
+      built,
+      'name',
+      LookupFilter.IS_NULL,
+      'value'
+    );
     fieldFilter.buildQuery();
     expect(built['where']['name']).toEqual(IsNull());
   });
@@ -61,21 +98,36 @@ describe('Test FieldFilter #buildQuery', () => {
   });
 
   it('should return a <between> filter', () => {
-    const fieldFilter = new FieldFilter(built, 'name', LookupFilter.BETWEEN, '1,10');
+    const fieldFilter = new FieldFilter(
+      built,
+      'name',
+      LookupFilter.BETWEEN,
+      '1,10'
+    );
     fieldFilter.buildQuery();
     expect(built['where']['name']).toEqual(Between(1, 10));
   });
 
   it('should return a <in> filter', () => {
-    const fieldFilter = new FieldFilter(built, 'name', LookupFilter.IN, '1,2,3,4,foo');
+    const fieldFilter = new FieldFilter(
+      built,
+      'name',
+      LookupFilter.IN,
+      '1,2,3,4,foo'
+    );
     fieldFilter.buildQuery();
     expect(built['where']['name']).toEqual(In(['1', '2', '3', '4', 'foo']));
   });
 
   it('should return a <not> filter', () => {
-    const fieldFilter = new FieldFilter(built, 'name', LookupFilter.EXACT, 'value', true);
+    const fieldFilter = new FieldFilter(
+      built,
+      'name',
+      LookupFilter.EXACT,
+      'value',
+      true
+    );
     fieldFilter.buildQuery();
     expect(built['where']['name']).toEqual(Not('value'));
   });
-
 });

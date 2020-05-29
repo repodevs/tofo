@@ -10,10 +10,10 @@ export enum LookupFilter {
   ENDS_WITH = 'endswith',
   IN = 'in',
   BETWEEN = 'between',
-  NOT = 'not',
+  NOT = 'not'
 }
 
 export enum LookupDelimiter {
   LOOKUP_DELIMITER = '__',
-  RELATION_DELIMITER = '.',
+  RELATION_DELIMITER = '.'
 }

@@ -1,21 +1,39 @@
+import {
+  Between,
+  In,
+  IsNull,
+  LessThan,
+  LessThanOrEqual,
+  Like,
+  MoreThan,
+  MoreThanOrEqual,
+  Not
+} from 'typeorm';
 import { AbstractFilter } from './filter';
 import { LookupFilter } from './lookup.enum';
-import { Like, IsNull, LessThan, LessThanOrEqual, MoreThan, MoreThanOrEqual, In, Between, Not } from 'typeorm';
+import { mergeDeep } from './utils/deep-merge';
 
 export class FieldFilter extends AbstractFilter {
-
   private notOperator: boolean;
+  private hierarchy: string[];
 
-  constructor(query: any, prop: string, lookup: LookupFilter, value: string, notOperator: boolean = false) {
+  constructor(
+    query: any,
+    prop: string,
+    lookup: LookupFilter,
+    value: string,
+    notOperator: boolean = false,
+    hierarchy?: string[]
+  ) {
     super(query, prop, lookup, value);
     this.notOperator = notOperator;
+    this.hierarchy = hierarchy;
   }
 
   public buildQuery() {
-
     let queryToAdd;
 
-    switch(this.lookup) {
+    switch (this.lookup) {
       case LookupFilter.EXACT:
         queryToAdd = { [this.prop]: this.value };
         break;
@@ -51,13 +69,25 @@ export class FieldFilter extends AbstractFilter {
         queryToAdd = { [this.prop]: Between(+rangeValues[0], +rangeValues[1]) };
         break;
     }
-    if(this.notOperator) {
+    if (this.notOperator) {
       queryToAdd[this.prop] = Not(queryToAdd[this.prop]);
     }
-    this.query['where'] = {
-      ...this.query['where'],
-      ...queryToAdd
+    if (this.hierarchy) {
+      let last = {};
+      let result = last;
+
+      for (let index = 0; index < this.hierarchy.length; index++) {
+        const key = this.hierarchy[index];
+        last[key] = {};
+        if (index !== this.hierarchy.length - 1) {
+          last = last[key];
+        } else {
+          last[key] = queryToAdd;
+        }
+      }
+
+      queryToAdd = result;
     }
+    this.query['where'] = mergeDeep(this.query['where'], queryToAdd);
   }
 }
-

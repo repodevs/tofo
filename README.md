@@ -107,10 +107,11 @@ __gte__ | Return entries with value greater than or equal to provided | `foo__gt
 __in__ | Return entries that match with values in list | `foo__in=admin,common`
 __between__ | Return entries in range | `foo__between=1,27`
 
-**Notice**: you can use negative logic prefixing lookup with `__not`.
+### Notice
 
-*Example:*
-`foo__not__contains=value`
+You can use negative logic prefixing lookup with `__not`. *Example:* `foo__not__contains=value`
+
+Querying a column from an embedded entity. *Example*: `user.name=value`
 
 ## Options
 

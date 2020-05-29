@@ -35,6 +35,28 @@ describe('Test Express integration', () => {
     server.close();
   });
 
+  it('should return an appropiate query for embeded entities', done => {
+    request(server)
+      .get(
+        '/get?name.first=rjlopezdev&name.last=justkey&user.email__contains=@gmail.com&pagination=false'
+      )
+      .expect(200)
+      .end((err, res) => {
+        expect(JSON.parse(res.text)).toEqual({
+          where: {
+            name: {
+              first: 'rjlopezdev',
+              last: 'justkey'
+            },
+            user: {
+              email: Like('%@gmail.com%')
+            }
+          }
+        });
+        done();
+      });
+  });
+
   it('should return an appropiate query built for GET /get?...', done => {
     request(server)
       .get(
