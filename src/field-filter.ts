@@ -10,7 +10,7 @@ import {
   Not
 } from 'typeorm';
 import { AbstractFilter } from './filter';
-import { Condition, LookupFilter } from './lookup.enum';
+import { LookupFilter, Operator } from './lookup.enum';
 import { mergeDeep } from './utils/deep-merge';
 
 export class FieldFilter extends AbstractFilter {
@@ -35,8 +35,7 @@ export class FieldFilter extends AbstractFilter {
 
     switch (this.lookup) {
       case LookupFilter.EXACT:
-        if (this.prop !== Condition.OR)
-          queryToAdd = { [this.prop]: this.value };
+        if (this.prop !== Operator.OR) queryToAdd = { [this.prop]: this.value };
         break;
       case LookupFilter.CONTAINS:
         queryToAdd = { [this.prop]: Like(`%${this.value}%`) };

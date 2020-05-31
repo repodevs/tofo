@@ -14,7 +14,7 @@
   <br>
 </p>
 
-# TypeORM Express Query Builder
+# TypeORM Server Query Builder
 This library allows you to transfrom automatically _url query_ into TypeORM findOptions queries.
 
 ## Installation
@@ -23,6 +23,7 @@ This library allows you to transfrom automatically _url query_ into TypeORM find
 
 
 ## How it works?
+You can use the <a href="https://github.com/justkey007/typeorm-front-query-builder">frontend query builder</a> to go faster without having to worry too much about the syntax.
 
 ![](https://raw.githubusercontent.com/justkey007/typeorm-server-query-builder/master/typeorm-express-pipeline.png)
 
@@ -32,7 +33,7 @@ This library allows you to transfrom automatically _url query_ into TypeORM find
 Use QueryBuilder export from package and pass your `req.query` as an argument:
 
 ```typescript
-import QueryBuilder from 'typeorm-server-query-builder';
+import { QueryBuilder } from 'typeorm-server-query-builder';
 
 const builder = new QueryBuilder(req.query);
 const builtQuery = builder.build();
@@ -120,9 +121,7 @@ Querying a column from an embedded entity. *Example*: `user.name=value`
   where: [
     { name: 'juste', age: MoreThanOrEqual('15') },
     { user: { role: 'admin' } }
-  ],
-  skip: 20,
-  take: 10
+  ]
 }
 
 // ?city=Dahomey&$or=name:juste|age__gte:15&$or=user.role:admin
@@ -130,9 +129,7 @@ Querying a column from an embedded entity. *Example*: `user.name=value`
   where: [
     { name: 'juste', city: 'Dahomey', age: MoreThanOrEqual('15') },
     { user: { role: 'admin' }, city: 'Dahomey' }
-  ],
-  skip: 20,
-  take: 10
+  ]
 }
 ```
 ## Options
@@ -146,3 +143,9 @@ order | - | Order for fields:<br>`+`: Ascendant <br> `-`: Descendant | `order=+f
 join | - | Set relations | `join=posts,comments`
 select | - | Set fields selection | `select=name,phoneNumber`
 
+## Others methods
+
+### Remove precautionary fields from the query before building
+```typescript
+removeField(field: string): QueryBuilder
+```

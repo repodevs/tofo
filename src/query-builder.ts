@@ -1,13 +1,15 @@
 import { ITEMS_PER_PAGE } from './default-config';
 import { FilterFactory } from './filter-factory';
-import { Condition } from './lookup.enum';
+import { Operator } from './lookup.enum';
 
 export class QueryBuilder {
   private expressQuery: any;
   private typeORMQuery: any;
+  private originalQuery: any;
 
-  constructor(expressQuery: any) {
-    this.expressQuery = expressQuery;
+  constructor(queryObject: object) {
+    this.expressQuery = { ...queryObject };
+    this.originalQuery = { ...queryObject };
     this.typeORMQuery = {};
   }
 
@@ -34,6 +36,35 @@ export class QueryBuilder {
     this.findAndsetOrQuery();
 
     return this.typeORMQuery;
+  }
+
+  public removeField(field: string): QueryBuilder {
+    function deleteField(query: object) {
+      for (const key in query) {
+        if (query.hasOwnProperty(key)) {
+          if (key.match(new RegExp(`^${field}$|^${field}__.*`))) {
+            delete query[key];
+          }
+        }
+      }
+    }
+    deleteField(this.originalQuery);
+    if (this.originalQuery[Operator.OR]) {
+      const queries: string[] = this.originalQuery[Operator.OR];
+      let newORqueries: string[] = [];
+      queries.forEach(query => {
+        const parsed = this.parseOrCondition(query);
+        deleteField(parsed);
+        newORqueries.push(this.stringifyORCondition(parsed));
+      });
+      this.originalQuery[Operator.OR] = newORqueries;
+    }
+    this.updateExpressQuery();
+    return this;
+  }
+
+  private getRawQuery(): object {
+    return this.originalQuery;
   }
 
   private setPage() {
@@ -72,8 +103,8 @@ export class QueryBuilder {
   }
 
   private findAndsetOrQuery() {
-    if (!this.expressQuery[Condition.OR]) return;
-    let conditions: string[] = this.expressQuery[Condition.OR];
+    if (!this.expressQuery[Operator.OR]) return;
+    let conditions: string[] = this.expressQuery[Operator.OR];
     if (!Array.isArray(conditions)) conditions = [conditions];
     const factory = new FilterFactory();
     const andCond = this.typeORMQuery['where'];
@@ -87,10 +118,10 @@ export class QueryBuilder {
       }
       this.typeORMQuery['where'].push({ ...findOpts['where'], ...andCond });
     });
-    delete this.expressQuery[Condition.OR];
+    delete this.expressQuery[Operator.OR];
   }
 
-  private parseOrCondition(query: string) {
+  private parseOrCondition(query: string): object {
     const result = {};
     const fields = query.split('|');
     fields.forEach(field => {
@@ -98,6 +129,17 @@ export class QueryBuilder {
       result[keyValue[0]] = keyValue[1];
     });
     return result;
+  }
+
+  private stringifyORCondition(query: object): string {
+    let result = '';
+    for (const key in query) {
+      if (query.hasOwnProperty(key)) {
+        const value = query[key];
+        result += `${key}:${value}|`;
+      }
+    }
+    return result.substr(0, result.length - 1);
   }
 
   private setOrder() {
@@ -125,5 +167,9 @@ export class QueryBuilder {
         `No order set for <${field}>. Prefix with one of these: [+, -]`
       );
     }
+  }
+
+  private updateExpressQuery() {
+    this.expressQuery = { ...this.originalQuery };
   }
 }

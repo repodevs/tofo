@@ -1,4 +1,4 @@
-import { Like, MoreThanOrEqual } from 'typeorm';
+import { Like, MoreThan, MoreThanOrEqual } from 'typeorm';
 import { ITEMS_PER_PAGE } from '../../src/default-config';
 import { QueryBuilder } from '../../src/query-builder';
 
@@ -297,6 +297,19 @@ describe('Test QueryBuilder #getOrderCriteria', () => {
         { name: 'juste', city: 'Dahomey', age: MoreThanOrEqual('15') },
         { user: { role: 'admin' }, city: 'Dahomey' }
       ]
+    });
+  });
+
+  it('Should delete the field before building it', () => {
+    const queryBuilder = new QueryBuilder({
+      name: 'Bossa',
+      name__isnull: true,
+      $or: ['name__endswith:ey|size__gt:18'],
+      pagination: false
+    });
+    queryBuilder.removeField('name');
+    expect(queryBuilder.build()).toEqual({
+      where: [{ size: MoreThan('18') }]
     });
   });
 });
