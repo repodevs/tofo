@@ -158,13 +158,13 @@ export class QueryBuilder {
   }
 
   private getOrderCriteria(field: string): string {
-    if (field.startsWith('+')) {
+    if (field.startsWith('^')) {
       return 'ASC';
     } else if (field.startsWith('-')) {
       return 'DESC';
     } else {
       throw new Error(
-        `No order set for <${field}>. Prefix with one of these: [+, -]`
+        `No order set for <${field}>. Prefix with one of these: [^, -]`
       );
     }
   }

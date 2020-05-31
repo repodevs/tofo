@@ -77,6 +77,26 @@ describe('Test Express integration', () => {
       });
   });
 
+  it('should return an appropiate query built with order filter for GET /get?...', done => {
+    request(server)
+      .get('/get?name=justkey&order=^age,-salary')
+      .expect(200)
+      .end((err, res) => {
+        expect(JSON.parse(res.text)).toEqual({
+          where: {
+            name: 'justkey'
+          },
+          order: {
+            age: 'ASC',
+            salary: 'DESC'
+          },
+          skip: 0,
+          take: 25
+        });
+        done();
+      });
+  });
+
   it('should return an appropiate query built for POST /post_urlquery?...', done => {
     request(server)
       .post('/post_urlquery?name=rjlopezdev&email__contains=@gmail.com')

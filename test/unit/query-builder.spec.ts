@@ -210,7 +210,7 @@ describe('Test QueryBuilder #setOrder', () => {
 
   it('should return a query with order equals to foo:ASC', () => {
     const queryBuilder: any = new QueryBuilder({
-      order: '+foo'
+      order: '^foo'
     });
     queryBuilder.setOrder();
     expect(queryBuilder.typeORMQuery).toEqual({
@@ -243,7 +243,7 @@ describe('Test QueryBuilder #setOrder', () => {
 describe('Test QueryBuilder #getOrderCriteria', () => {
   it('should return a query with order equals to foo:ASC', () => {
     const queryBuilder: any = new QueryBuilder({});
-    const orderCriteria = queryBuilder.getOrderCriteria('+foo');
+    const orderCriteria = queryBuilder.getOrderCriteria('^foo');
     expect(orderCriteria).toBe('ASC');
   });
 
