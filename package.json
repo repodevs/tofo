@@ -1,6 +1,6 @@
 {
   "name": "typeorm-server-query-builder",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Easily transform an url query into TypeORM query",
   "scripts": {
     "build": "tsc -p .",
@@ -20,7 +20,9 @@
     "nest"
   ],
   "author": "rjlopezdev",
-  "contributors": ["justkey007"],
+  "contributors": [
+    "justkey007"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^24.9.0",
@@ -33,11 +35,12 @@
     "prettier": "^1.19.1",
     "supertest": "^4.0.2",
     "ts-jest": "^25.3.0",
-    "typeorm": "^0.2.22",
     "typescript": "^3.7.5"
   },
-  "dependencies": {},
+  "dependencies": {
+    "typeorm": "^0.2.25"
+  },
   "peerDependencies": {
-    "typeorm": "^0.2.15"
+    "typeorm": "^0.2.25"
   }
 }

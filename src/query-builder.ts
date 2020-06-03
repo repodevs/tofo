@@ -63,7 +63,7 @@ export class QueryBuilder {
     return this;
   }
 
-  private getRawQuery(): object {
+  public getRawQuery(): object {
     return this.originalQuery;
   }
 
