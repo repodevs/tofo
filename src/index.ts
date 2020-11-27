@@ -1,2 +1,2 @@
 export * from './default-config';
-export * from './query-builder';
+export * from './find-option-builder';

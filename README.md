@@ -1,41 +1,41 @@
 <p align="center">
-  Easily transform an url query into TypeORM query
+  Easily transform an url query into TypeORM FindOption
   <br>
   <br>
-  <img src="https://circleci.com/gh/justkey007/typeorm-server-query-builder/tree/master.svg?style=svg">
+  <img src="https://circleci.com/gh/repodevs/tofo/tree/master.svg?style=svg">
   <br>
   <br>
   <a href="https://codecov.io/gh/rjlopezdev/typeorm-express-query-builder">
   <img src="https://codecov.io/gh/rjlopezdev/typeorm-express-query-builder/branch/master/graph/badge.svg" />
   </a>
-  <img src="https://badge.fury.io/js/typeorm-server-query-builder.svg">
+  <img src="https://badge.fury.io/js/tofo.svg">
   <img src="https://img.shields.io/badge/license-MIT-green.svg">
   <br>
   <br>
 </p>
 
-# TypeORM Server Query Builder
+# TypeORM Server FindOption Builder
 This library allows you to transfrom automatically _url query_ into TypeORM findOptions queries.
 
 ## Installation
 
-`npm install typeorm-server-query-builder`
+`npm install tofo`
 
 
 ## How it works?
 You can use the <a href="https://github.com/justkey007/typeorm-front-query-builder">frontend query builder</a> to go faster without having to worry too much about the syntax.
 
-![](https://raw.githubusercontent.com/justkey007/typeorm-server-query-builder/master/typeorm-express-pipeline.png)
+![](https://raw.githubusercontent.com/repodevs/tofo/master/typeorm-express-pipeline.png)
 
 
 ## Usage
 
-Use QueryBuilder export from package and pass your `req.query` as an argument:
+Use FindOptionBuilder export from package and pass your `req.query` as an argument:
 
 ```typescript
-import { QueryBuilder } from 'typeorm-server-query-builder';
+import { FindOptionBuilder } from 'tofo';
 
-const builder = new QueryBuilder(req.query);
+const builder = new FindOptionBuilder(req.query);
 const builtQuery = builder.build();
 // Now your query is built, pass it to your TypeORM repository
 const results = await fooRepository.find(builtQuery);
@@ -68,7 +68,7 @@ It will be transformed into:
 `POST foo/?name__contains=foo&role__in=admin,common&age__gte=18&page=3&limit=10`
 ```javascript
 app.get('/foo', (req, res) => {
-  const queryBuilder = new QueryBuilder(req.query); // => Parsed into req.query
+  const queryBuilder = new FindOptionBuilder(req.query); // => Parsed into req.query
   const built = queryBuilder.build();
 })
 ```
@@ -87,7 +87,7 @@ POST foo/, body: {
 
 ```javascript
 app.post('/foo', (req, res) => {
-  const queryBuilder = new QueryBuilder(req.body); // => Parsed into req.body
+  const queryBuilder = new FindOptionBuilder(req.body); // => Parsed into req.body
   const built = queryBuilder.build();
 })
 ```
@@ -147,5 +147,10 @@ select | - | Set fields selection | `select=name,phoneNumber`
 
 ### Remove precautionary fields from the query before building
 ```typescript
-removeField(field: string): QueryBuilder
+removeField(field: string): FindOptionBuilder
+```
+
+### Set Allowed Fields from the query before building
+```typescript
+setAllowedFields(['allowed_field1', 'allowed_field2']): FindOptionBuilder
 ```

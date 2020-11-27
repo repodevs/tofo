@@ -1,5 +1,5 @@
 import { FilterFactory } from '../../src/filter-factory';
-import { QueryBuilder } from '../../src/query-builder';
+import { FindOptionBuilder } from '../../src/find-option-builder';
 import { Like, IsNull, MoreThan, MoreThanOrEqual, LessThanOrEqual, LessThan } from 'typeorm';
 
 describe('Test FieldFilter', () => {
@@ -64,10 +64,10 @@ describe('Test FieldFilter', () => {
 
 });
 
-describe('Test Query Builder', () => {
+describe('Test FindOption Builder', () => {
 
   it('should build a query with an exact & contains filter', () => {
-    const queryBuilder = new QueryBuilder({
+    const queryBuilder = new FindOptionBuilder({
       name: 'rjlopezdev',
       email__contains: '@gmail.com'
     });
@@ -83,7 +83,7 @@ describe('Test Query Builder', () => {
   });
 
   it('should build a query with skip equals to 0 and take equals to 25', () => {
-    const queryBuilder = new QueryBuilder({
+    const queryBuilder = new FindOptionBuilder({
       name: 'rjlopezdev',
       email__contains: '@gmail.com',
       page: 1
@@ -100,7 +100,7 @@ describe('Test Query Builder', () => {
   });
 
   it('should build a query with skip equals to 25 and take equals to 25', () => {
-    const queryBuilder = new QueryBuilder({
+    const queryBuilder = new FindOptionBuilder({
       name: 'rjlopezdev',
       email__contains: '@gmail.com',
       page: 2
@@ -117,7 +117,7 @@ describe('Test Query Builder', () => {
   });
 
   it('should build a query with skip equals to 50 and take equals to 25', () => {
-    const queryBuilder = new QueryBuilder({
+    const queryBuilder = new FindOptionBuilder({
       name: 'rjlopezdev',
       email__contains: '@gmail.com',
       page: 3
@@ -134,7 +134,7 @@ describe('Test Query Builder', () => {
   });
 
   it('should build a query with skip equals to 20 and take equals to 10', () => {
-    const queryBuilder = new QueryBuilder({
+    const queryBuilder = new FindOptionBuilder({
       name: 'rjlopezdev',
       email__contains: '@gmail.com',
       page: 3,

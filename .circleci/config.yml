@@ -4,7 +4,7 @@ executors:
   node_container:
     docker:
       - image: circleci/node:8-browsers
-    working_directory: ~/typeorm-server-query-builder
+    working_directory: ~/tofo
 
 jobs:
 
@@ -13,13 +13,13 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: typeorm-server-query-builder-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          key: tofo-{{ .Branch }}-{{ checksum "package-lock.json" }}
       - run: npm install
       - save_cache:
-          key: typeorm-server-query-builder-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          key: tofo-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths: "node_modules"
       - persist_to_workspace:
-          root: ~/typeorm-server-query-builder
+          root: ~/tofo
           paths:
             - .
 
@@ -27,7 +27,7 @@ jobs:
     executor: node_container
     steps:
       - attach_workspace:
-          at: ~/typeorm-server-query-builder
+          at: ~/tofo
       - run: npm run test:cov
       - run: npm run codecov
   
@@ -35,14 +35,14 @@ jobs:
     executor: node_container
     steps:
       - attach_workspace:
-          at: ~/typeorm-server-query-builder
+          at: ~/tofo
       - run: npm run build
 
   publish:
     executor: node_container
     steps:
       - attach_workspace:
-          at: ~/typeorm-server-query-builder
+          at: ~/tofo
 
       - run:
           name: Build package	
@@ -55,7 +55,7 @@ jobs:
           command: cp ./README.md ./dist
       - run:
           name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/typeorm-server-query-builder/dist/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/tofo/dist/.npmrc
       - run:
           name: Change to dist dir & publish
           command: cd dist && npm publish

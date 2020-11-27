@@ -1,8 +1,9 @@
-import { ITEMS_PER_PAGE } from './default-config';
+import { ITEMS_PER_PAGE, DEFAULT_FILTER_KEYS } from './default-config';
 import { FilterFactory } from './filter-factory';
 import { Operator } from './lookup.enum';
+import { difference } from 'lodash';
 
-export class QueryBuilder {
+export class FindOptionBuilder {
   private expressQuery: any;
   private typeORMQuery: any;
   private originalQuery: any;
@@ -38,7 +39,7 @@ export class QueryBuilder {
     return this.typeORMQuery;
   }
 
-  public removeField(field: string): QueryBuilder {
+  public removeField(field: string): FindOptionBuilder {
     function deleteField(query: object) {
       for (const key in query) {
         if (query.hasOwnProperty(key)) {
@@ -60,6 +61,49 @@ export class QueryBuilder {
       this.originalQuery[Operator.OR] = newORqueries;
     }
     this.updateExpressQuery();
+    return this;
+  }
+
+  public getRelatedField(field: string) {
+    const fields = {};
+    function _getField(query: object) {
+      for (const key in query) {
+        if (query.hasOwnProperty(key)) {
+          if (key.match(new RegExp(`^${field}$|^${field}__.*`))) {
+            const v = query[key];
+            fields[key] = v;
+          }
+        }
+      }
+    }
+    _getField(this.originalQuery);
+    return fields;
+  }
+
+  public setAllowedFields(lists: any[]): FindOptionBuilder {
+    if (lists && lists.length) {
+      let keys = lists.concat(DEFAULT_FILTER_KEYS);
+      // In case any duplicate keys, remove it.
+      keys = [...new Set(keys)];
+      const filteredQuery = {};
+
+      for (const key of keys) {
+        const field = this.getRelatedField(key);
+        Object.assign(filteredQuery, field);
+      }
+
+      const originalQuery = this.getRawQuery();
+      const fieldShouldRemoves = difference(
+        Object.keys(originalQuery),
+        Object.keys(filteredQuery),
+      );
+
+      // Remove other keys that not in AllowedLists
+      for (const field of fieldShouldRemoves) {
+        this.removeField(field);
+      }
+    }
+
     return this;
   }
 

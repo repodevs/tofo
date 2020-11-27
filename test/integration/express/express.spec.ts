@@ -2,7 +2,7 @@ import express = require('express');
 import request = require('supertest');
 import bodyParser = require('body-parser');
 import { Like } from 'typeorm';
-import { QueryBuilder } from '../../../src/query-builder';
+import { FindOptionBuilder } from '../../../src/find-option-builder';
 
 describe('Test Express integration', () => {
   let server;
@@ -12,17 +12,17 @@ describe('Test Express integration', () => {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.get('/get', (req, res) => {
-      const queryBuilder = new QueryBuilder(req.query);
+      const queryBuilder = new FindOptionBuilder(req.query);
       const built = queryBuilder.build();
       res.send(built);
     });
     app.post('/post_urlquery', (req, res) => {
-      const queryBuilder = new QueryBuilder(req.query);
+      const queryBuilder = new FindOptionBuilder(req.query);
       const built = queryBuilder.build();
       res.send(built);
     });
     app.post('/post_body', (req, res) => {
-      const queryBuilder = new QueryBuilder(req.body);
+      const queryBuilder = new FindOptionBuilder(req.body);
       const built = queryBuilder.build();
       res.send(built);
     });
