@@ -312,7 +312,9 @@ describe('Test FindOptionBuilder #getOrderCriteria', () => {
       where: [{ size: MoreThan('18') }]
     });
   });
+});
 
+describe('Test FindOptionBuilder #allowedFields', () => {
   it('Should delete the field not in allowed lists before building it', () => {
     const findOptionBuilder = new FindOptionBuilder({
       not_allowed_field1: 'Spammer',

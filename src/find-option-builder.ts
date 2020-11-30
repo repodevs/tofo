@@ -7,11 +7,13 @@ export class FindOptionBuilder {
   private expressQuery: any;
   private typeORMQuery: any;
   private originalQuery: any;
+  public allowedFields: any;
 
   constructor(queryObject: object) {
     this.expressQuery = { ...queryObject };
     this.originalQuery = { ...queryObject };
     this.typeORMQuery = {};
+    this.allowedFields = [];
   }
 
   public build(): any {
@@ -24,6 +26,7 @@ export class FindOptionBuilder {
     }
     delete this.expressQuery['pagination'];
     this.setOrder();
+    this.buildAllowedFields();
     this.setRelations();
     this.setFieldSelection();
 
@@ -80,14 +83,28 @@ export class FindOptionBuilder {
     return fields;
   }
 
+  public getAllowedFields() {
+    return this.allowedFields;
+  }
+
+  public useDefaultAllowedFields(): FindOptionBuilder {
+    this.allowedFields = DEFAULT_FILTER_KEYS;
+    return this;
+  }
+
   public setAllowedFields(lists: any[]): FindOptionBuilder {
     if (lists && lists.length) {
-      let keys = lists.concat(DEFAULT_FILTER_KEYS);
-      // In case any duplicate keys, remove it.
-      keys = [...new Set(keys)];
-      const filteredQuery = {};
+      const keys = lists.concat(this.getAllowedFields());
+      this.allowedFields = [...new Set(keys)]; // In case any duplicate keys, distinct it.
+    }
+    return this;
+  }
 
-      for (const key of keys) {
+  private buildAllowedFields(): FindOptionBuilder {
+    let fields = this.getAllowedFields();
+    if (fields && fields.length) {
+      const filteredQuery = {};
+      for (const key of fields) {
         const field = this.getRelatedField(key);
         Object.assign(filteredQuery, field);
       }
