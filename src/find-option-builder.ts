@@ -17,16 +17,9 @@ export class FindOptionBuilder {
   }
 
   public build(): any {
-    if (
-      this.expressQuery['pagination'] === undefined ||
-      this.expressQuery['pagination'] === true
-    ) {
-      this.setPage();
-      this.setLimit();
-    }
-    delete this.expressQuery['pagination'];
-    this.setOrder();
     this.buildAllowedFields();
+    this.setPagination();
+    this.setOrder();
     this.setRelations();
     this.setFieldSelection();
 
@@ -126,6 +119,20 @@ export class FindOptionBuilder {
 
   public getRawQuery(): object {
     return this.originalQuery;
+  }
+
+  private setPagination() {
+    if (
+      this.expressQuery['pagination'] === undefined ||
+      this.expressQuery['pagination'] === true
+    ) {
+      this.setPage();
+      this.setLimit();
+    }
+
+    delete this.expressQuery['pagination'];
+    delete this.expressQuery['page'];
+    delete this.expressQuery['limit'];
   }
 
   private setPage() {

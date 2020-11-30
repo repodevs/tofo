@@ -327,7 +327,8 @@ describe('Test FindOptionBuilder #allowedFields', () => {
     findOptionBuilder.setAllowedFields([
       'allowed_field1',
       'allowed_field2',
-      'age'
+      'age',
+      'pagination'
     ]);
     expect(findOptionBuilder.build()).toEqual({
       where: [
