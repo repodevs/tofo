@@ -324,10 +324,15 @@ describe('Test FindOptionBuilder #allowedFields', () => {
       $or: ['not_allowed_field1__endswith:ey|age__gt:15'],
       pagination: false
     });
-    findOptionBuilder.setAllowedFields(['allowed_field1', 'allowed_field2', 'age'])
+    findOptionBuilder.setAllowedFields([
+      'allowed_field1',
+      'allowed_field2',
+      'age'
+    ]);
     expect(findOptionBuilder.build()).toEqual({
-      where: [{ age: MoreThan('15'), allowed_field1: 'Love', allowed_field2: 'Peace'}]
+      where: [
+        { age: MoreThan('15'), allowed_field1: 'Love', allowed_field2: 'Peace' }
+      ]
     });
   });
-
 });

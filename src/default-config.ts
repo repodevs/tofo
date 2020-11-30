@@ -6,5 +6,5 @@ export let DEFAULT_FILTER_KEYS = [
   'limit',
   'order',
   'join',
-  'select',
+  'select'
 ];

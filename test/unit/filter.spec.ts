@@ -1,9 +1,15 @@
 import { FilterFactory } from '../../src/filter-factory';
 import { FindOptionBuilder } from '../../src/find-option-builder';
-import { Like, IsNull, MoreThan, MoreThanOrEqual, LessThanOrEqual, LessThan } from 'typeorm';
+import {
+  Like,
+  IsNull,
+  MoreThan,
+  MoreThanOrEqual,
+  LessThanOrEqual,
+  LessThan
+} from 'typeorm';
 
 describe('Test FieldFilter', () => {
-
   const filterFactory = new FilterFactory();
   const built = {};
 
@@ -60,12 +66,9 @@ describe('Test FieldFilter', () => {
     filter.buildQuery();
     expect(built['where']['name']).toEqual(LessThanOrEqual('2'));
   });
-
-
 });
 
 describe('Test FindOption Builder', () => {
-
   it('should build a query with an exact & contains filter', () => {
     const queryBuilder = new FindOptionBuilder({
       name: 'rjlopezdev',
@@ -75,10 +78,10 @@ describe('Test FindOption Builder', () => {
     expect(build).toEqual({
       where: {
         name: 'rjlopezdev',
-        email: Like('%@gmail.com%'),
+        email: Like('%@gmail.com%')
       },
       skip: 0,
-      take: 25,
+      take: 25
     });
   });
 
@@ -92,10 +95,10 @@ describe('Test FindOption Builder', () => {
     expect(build).toEqual({
       where: {
         name: 'rjlopezdev',
-        email: Like('%@gmail.com%'),
+        email: Like('%@gmail.com%')
       },
       skip: 0,
-      take: 25,
+      take: 25
     });
   });
 
@@ -109,10 +112,10 @@ describe('Test FindOption Builder', () => {
     expect(build).toEqual({
       where: {
         name: 'rjlopezdev',
-        email: Like('%@gmail.com%'),
+        email: Like('%@gmail.com%')
       },
       skip: 25,
-      take: 25,
+      take: 25
     });
   });
 
@@ -126,10 +129,10 @@ describe('Test FindOption Builder', () => {
     expect(build).toEqual({
       where: {
         name: 'rjlopezdev',
-        email: Like('%@gmail.com%'),
+        email: Like('%@gmail.com%')
       },
       skip: 50,
-      take: 25,
+      take: 25
     });
   });
 
@@ -144,10 +147,10 @@ describe('Test FindOption Builder', () => {
     expect(build).toEqual({
       where: {
         name: 'rjlopezdev',
-        email: Like('%@gmail.com%'),
+        email: Like('%@gmail.com%')
       },
       skip: 20,
-      take: 10,
+      take: 10
     });
   });
 });

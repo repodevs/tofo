@@ -1,8 +1,7 @@
-import { FilterFactory } from "../../src/filter-factory";
-import { FieldFilter } from "../../src/field-filter";
+import { FilterFactory } from '../../src/filter-factory';
+import { FieldFilter } from '../../src/field-filter';
 
 describe('Test FilterFactory #get', () => {
-
   const factory = new FilterFactory();
 
   it('should return an instance of FieldFilter', () => {
@@ -21,11 +20,9 @@ describe('Test FilterFactory #get', () => {
     expect(filter).toBeInstanceOf(FieldFilter);
     expect(filter.notOperator).toBeFalsy();
   });
-})
-
+});
 
 describe('Test FilterFactory #isFieldFilter', () => {
-
   const factory: any = new FilterFactory();
 
   it('should return true', () => {
@@ -37,5 +34,4 @@ describe('Test FilterFactory #isFieldFilter', () => {
     const isField = factory.isFieldFilter('fk.field');
     expect(isField).toBeFalsy();
   });
-
 });

@@ -112,7 +112,7 @@ export class FindOptionBuilder {
       const originalQuery = this.getRawQuery();
       const fieldShouldRemoves = difference(
         Object.keys(originalQuery),
-        Object.keys(filteredQuery),
+        Object.keys(filteredQuery)
       );
 
       // Remove other keys that not in AllowedLists
