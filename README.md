@@ -1,12 +1,12 @@
 <p align="center">
-  Easily transform an url query into TypeORM FindOption
+  Easily transform an url query into TypeORM FindOptions
   <br>
   <br>
   <img src="https://circleci.com/gh/repodevs/tofo/tree/master.svg?style=svg">
   <br>
   <br>
-  <a href="https://codecov.io/gh/rjlopezdev/typeorm-express-query-builder">
-  <img src="https://codecov.io/gh/rjlopezdev/typeorm-express-query-builder/branch/master/graph/badge.svg" />
+  <a href="https://codecov.io/gh/repodevs/tofo">
+  <img src="https://codecov.io/gh/repodevs/tofo/branch/master/graph/badge.svg" />
   </a>
   <img src="https://badge.fury.io/js/tofo.svg">
   <img src="https://img.shields.io/badge/license-MIT-green.svg">
@@ -14,8 +14,8 @@
   <br>
 </p>
 
-# TypeORM Server FindOption Builder
-This library allows you to transfrom automatically _url query_ into TypeORM findOptions queries.
+# TypeORM [FindOptions](https://github.com/typeorm/typeorm/blob/master/docs/find-options.md) Builder
+This library allows you to transform automatically _url query_ into TypeORM FindOptions queries.
 
 ## Installation
 
@@ -30,7 +30,7 @@ You can use the <a href="https://github.com/justkey007/typeorm-front-query-build
 
 ## Usage
 
-Use FindOptionBuilder export from package and pass your `req.query` as an argument:
+Use `FindOptionBuilder` export from package and pass your `req.query` as an argument:
 
 ```typescript
 import { FindOptionBuilder } from 'tofo';
