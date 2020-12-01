@@ -1,6 +1,6 @@
 {
   "name": "tofo",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Easily transform an url query into TypeORM FindOption",
   "scripts": {
     "build": "tsc -p .",

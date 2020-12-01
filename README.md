@@ -14,8 +14,8 @@
   <br>
 </p>
 
-# TypeORM [FindOptions](https://github.com/typeorm/typeorm/blob/master/docs/find-options.md) Builder
-This library allows you to transform automatically _url query_ into TypeORM FindOptions queries.
+# TOFO - TypeORM [FindOptions](https://github.com/typeorm/typeorm/blob/master/docs/find-options.md) Builder
+TOFO stand for `T`ype`O`RM `F`ind`O`ptions. this library allows you to transform automatically _url query_ into TypeORM FindOptions queries.
 
 ## Installation
 
@@ -23,27 +23,31 @@ This library allows you to transform automatically _url query_ into TypeORM Find
 
 
 ## How it works?
-You can use the <a href="https://github.com/justkey007/typeorm-front-query-builder">frontend query builder</a> to go faster without having to worry too much about the syntax.
 
-![](https://raw.githubusercontent.com/repodevs/tofo/master/typeorm-express-pipeline.png)
+![](https://raw.githubusercontent.com/repodevs/tofo/master/tofo-flow.png)
 
 
 ## Usage
 
-Use `FindOptionBuilder` export from package and pass your `req.query` as an argument:
+* [Quick Start](#quick-start)
+* [Using Allowed Fields](#allowed-fields)
+* [Using POST method to retrive data](#using-post-method-to-retrieve-data)
 
+### Quick Start
+
+Use `FindOptionBuilder` export from package and pass your `req.query` as an argument.
+
+Given the following url query string:
+
+`foo/?name__contains=foo&role__in=admin,common&age__gte=18&page=3&limit=10`
+
+Then build the query into FindOptions
 ```typescript
 import { FindOptionBuilder } from 'tofo';
 
 const builder = new FindOptionBuilder(req.query);
 const builtQuery = builder.build();
-// Now your query is built, pass it to your TypeORM repository
-const results = await fooRepository.find(builtQuery);
 ```
-
-Given the following url query string:
-
-`foo/?name__contains=foo&role__in=admin,common&age__gte=18&page=3&limit=10`
 
 It will be transformed into:
 
@@ -59,36 +63,65 @@ It will be transformed into:
 }
 ```
 
-## Different ways of retrieve data
+Now your query is builted, pass it to your TypeORM repository.
 
-### GET, POST method by url query string
-
-`GET foo/?name__contains=foo&role__in=admin,common&age__gte=18&page=3&limit=10`
-
-`POST foo/?name__contains=foo&role__in=admin,common&age__gte=18&page=3&limit=10`
-```javascript
-app.get('/foo', (req, res) => {
-  const queryBuilder = new FindOptionBuilder(req.query); // => Parsed into req.query
-  const built = queryBuilder.build();
-})
+```typescript
+const results = await fooRepository.find(builtQuery);
 ```
 
-### POST method by body
+For another available syntax can be found in [here](#available-lookups):
 
-```javascript
-POST foo/, body: {
-  "name__contains": "foo",
-  "role__in": "admin,common",
-  "age__gte": 18,
-  "page": 3,
-  "limit": 10
+### Allowed Fields
+
+By default, `tofo` accepting all fields passed in `req.query`. If you need to filtering for only some fields you can use `setAllowedFields()` function.
+
+```typescript
+// Let's say this query got from req.query
+const query = { name: "foo", status: "active", location: "Sukowati", limit: 5 };
+
+const builder = new FindOptionBuilder(query);
+// Set allowed fields
+builder.setAllowedFields(['limit']);
+builder.setAllowedFields(['name', 'status']);
+
+// Build query
+const builtQuery = builder.build();
+```
+
+It will be transformed into:
+
+```typescript
+{
+  skip: 0,
+  take: 5,
+  where: {
+    name: 'foo',
+    status: 'active'
+  },
 }
 ```
 
+> WARNING: you also need to set allowed [builtin query options keys](#query-option-keys) if needed, otherwise the keys will be removed before build.
+
+### Using POST method to retrieve data
+
+Instead using `req.query` from GET method, you also can send data using POST method and retrieve the data from `req.body`.
+
+```bash
+curl --location --request POST 'http://localhost/api/foo' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "foo",
+    "status": "active"
+}'
+```
+
+And handle data like
+
 ```javascript
-app.post('/foo', (req, res) => {
-  const queryBuilder = new FindOptionBuilder(req.body); // => Parsed into req.body
-  const built = queryBuilder.build();
+app.post('/api/foo', (req, res) => {
+  const builder = new FindOptionBuilder(req.body); // => Process data from req.body
+  const builtQuery = builder.build();
 })
 ```
 
@@ -132,7 +165,7 @@ Querying a column from an embedded entity. *Example*: `user.name=value`
   ]
 }
 ```
-## Options
+## Query Option Keys
 
 | Option | Default | Behaviour | Example |
 | --- | :---: | --- | --- |
@@ -143,7 +176,11 @@ order | - | Order for fields:<br>`^`: Ascendant <br> `-`: Descendant | `order=^f
 join | - | Set relations | `join=posts,comments`
 select | - | Set fields selection | `select=name,phoneNumber`
 
-## Others methods
+> NOTE: If you using `AllowedFields` you also need to include these option keys also.
+
+---
+
+## Available Methods
 
 ### Remove precautionary fields from the query before building
 ```typescript
@@ -154,3 +191,9 @@ removeField(field: string): FindOptionBuilder
 ```typescript
 setAllowedFields(['allowed_field1', 'allowed_field2']): FindOptionBuilder
 ```
+
+---
+
+## Others
+
+You can use the <a href="https://github.com/justkey007/typeorm-front-query-builder">frontend query builder</a> to go faster without having to worry too much about the syntax.
